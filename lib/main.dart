@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-
-import '../models.dart';
+import 'models.dart';
 import 'provider.dart';
-
+import 'dart:io';
 void main() {
+  HttpOverrides.global = NoCheckCertificateHttpOverrides();
   runApp(MyApp());
+}
+
+class NoCheckCertificateHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }
 
 class MyApp extends StatelessWidget { //MyApp 클래스 선언
@@ -19,7 +28,6 @@ class MyApp extends StatelessWidget { //MyApp 클래스 선언
 }
 
 class MyPage extends StatefulWidget {
-  const MyPage({Key? key}) : super(key: key);
 
   @override
   State<MyPage> createState() => _MyPageState();
@@ -65,6 +73,8 @@ class _MyPageState extends State<MyPage> {
                 children: [
                   Text(buss[index].arrtime),
                   Text(buss[index].busnum),
+                  //Text(buss[index].title),
+                  //Text(buss[index].content),
                 ],
               ),
             );
